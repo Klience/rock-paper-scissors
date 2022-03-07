@@ -92,7 +92,7 @@ Found bugs:
   -- that's because player's undefined value is the same as computer's undefined value, because 
 -- game() doesn't show returned values from playRound();
 -- when there's a tie, player's or computer's score randomly increases by 1;
--- score increases inconcsistently;
+-- score increases inconsistently up to 6, but shall stop at 5;
 -- roundResult is declared but it's value is never read;
 
 */
