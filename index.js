@@ -33,66 +33,65 @@ function playerChoice() {
 
 // Defines rules, compares choices, defines winner and score
 function playRound(playerSelection, computerSelection) {
-  playerSelection = playerSelection.toLowerCase(); // cannot read undefined sometimes
+  playerSelection = playerSelection.toLowerCase();
   computerSelection = computerSelection.toLowerCase();
 
   if (playerSelection === computerSelection) {
-    return `It's a tie. ${playerSelection} matches ${computerSelection}`; // maybe bug here
+    return `It's a tie. ${playerSelection} matches ${computerSelection}`;
   } else if (
     (playerSelection === 'rock' && computerSelection === 'scissors') ||
     (playerSelection === 'paper' && computerSelection === 'rock') ||
     (playerSelection === 'scissors' && computerSelection === 'paper')
   ) {
-    ++playerScore; // bug here
+    ++playerScore;
     return `You won! ${playerSelection} beats ${computerSelection}`;
   } else {
-    ++computerScore; // bug here
+    ++computerScore;
     return `You lost! ${computerSelection} beats ${playerSelection}`;
   }
 }
 
+// Plays the necessary number of rounds, outputs round's number, starting scores of 0 and then each round's score
 function game() {
   for (let i = 0; i < 5; i++) {
-    // check this
     let computerSelection = computerChoice();
     let playerSelection = playerChoice();
     let roundResult = ``;
     if (playerSelection === null || playerSelection === '') {
       return;
-    } else {
-      roundResult = playRound(playerSelection, computerSelection); // bug here
     }
     console.log(`Player's score: ${playerScore}`);
     console.log(`Computer's score: ${computerScore}`);
     console.log(
-      `Round #${i}: ${playRound(playerSelection, computerSelection)}`
+      `Round #${i + 1}: ${playRound(playerSelection, computerSelection)}`
     );
   }
+  endGame();
 }
 
+// Calculates end game outcome by comparing scores
 function endGame() {
   if (playerScore > computerScore) {
     console.log(`Player wins with a score of ${playerScore}`);
   } else if (playerScore < computerScore) {
     console.log(`Computer wins with a score of ${computerScore}`);
   } else if (playerScore == computerScore) {
-    // bug here
     console.log('Friendship wins!');
   } else {
     console.log('Game canceled');
   }
 }
-// game
+
 game();
-endGame();
 
 /*
-Found bugs:
--- Friendship wins when player's choice has empty string "" or undefined;
-  -- that's because player's undefined value is the same as computer's undefined value, because 
--- game() doesn't show returned values from playRound();
--- when there's a tie, player's or computer's score randomly increases by 1;
--- score increases inconsistently up to 6, but shall stop at 5;
--- roundResult is declared but it's value is never read;
+Found bugs (FIXED ALL):
+-- Friendship wins when player's choice has empty string "" or undefined; // FIXED
+  -- that's because player's undefined value is the same as computer's undefined value, because // FIXED
+-- game() doesn't show returned values from playRound(); // FIXED
+-- when there's a tie, player's or computer's score randomly increases by 1; // FIXED
+-- score increases inconsistently up to 6, but shall stop at 5; // FIXED
+-- roundResult is declared but it's value is never read; // FIXED
+-- Round's number starts with 0, because of the "for loop". // FIXED
 
 */
