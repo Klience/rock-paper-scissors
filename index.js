@@ -1,97 +1,86 @@
-/*
-This is a v.1 console.log()-edition Rock-Paper-Scissors game.
-All results are meant to be displayed in console.
+const rock = document.querySelector('.rock');
+const paper = document.querySelector('.paper');
+const scissors = document.querySelector('.scissors');
+const result = document.querySelector('.result');
+const playerScore = document.querySelector('.player-score');
+const computerScore = document.querySelector('.computer-score');
+const winner = document.querySelector('.winner');
 
-=====The rules:=====
+const buttonContainer = document.querySelector('.button-container');
 
-Play 5 games in total.
-For each game:
-	- Player picks a shape.
-  - Computer randomly picks a shape.
-  - Game compares choices using predefined rules.
-  - Game outputs a win/loss/tie statement.
-  - Game increments player's or computer's score by 1 and outputs the score.
-  - Game outputs the rule applied.
-  - Game outputs the round's number, e.g. Round #1.
-  - Game outputs the final winner when player or computer reaches the score of 5.
+const buttons = [rock, paper, scissors];
+let pScore = 0;
+let cScore = 0;
 
-  */
+buttons.forEach(button => button.addEventListener('click', playGame));
 
-let playerScore = 0;
-let computerScore = 0;
-
-const shapes = ['rock', 'paper', 'scissors'];
-
-// Returns computer's random choice value
 function computerChoice() {
+	const shapes = ['rock', 'paper', 'scissors'];
   return shapes[~~Math.floor(Math.random() * shapes.length)];
 }
-// Returns player's choice value
+
+// refers to window.event which is deprecated -- a fix needed
 function playerChoice() {
-  return prompt('Pick a shape', '');
+  return event.target.innerText;
 }
 
-// Defines rules, compares choices, defines winner and score
 function playRound(playerSelection, computerSelection) {
   playerSelection = playerSelection.toLowerCase();
   computerSelection = computerSelection.toLowerCase();
 
   if (playerSelection === computerSelection) {
-    return `It's a tie. ${playerSelection} matches ${computerSelection}`;
+    return `It's a tie. ${playerSelection.charAt(0).toUpperCase() + playerSelection.slice(1)} matches ${computerSelection.charAt(0).toUpperCase() + computerSelection.slice(1)}`;
   } else if (
     (playerSelection === 'rock' && computerSelection === 'scissors') ||
     (playerSelection === 'paper' && computerSelection === 'rock') ||
     (playerSelection === 'scissors' && computerSelection === 'paper')
   ) {
-    ++playerScore;
-    return `You won! ${playerSelection} beats ${computerSelection}`;
+    ++pScore;
+    return `You won! ${playerSelection.charAt(0).toUpperCase() + playerSelection.slice(1)} beats ${computerSelection.charAt(0).toUpperCase() + computerSelection.slice(1)}`;
   } else {
-    ++computerScore;
-    return `You lost! ${computerSelection} beats ${playerSelection}`;
+    ++cScore;
+    return `You lost! ${computerSelection.charAt(0).toUpperCase() + computerSelection.slice(1)} beats ${playerSelection.charAt(0).toUpperCase() + playerSelection.slice(1)}`;
   }
 }
 
-// Plays the necessary number of rounds, outputs round's number, starting scores of 0 and then each round's score
-function game() {
-  for (let i = 0; i < 5; i++) {
-    let computerSelection = computerChoice();
+function playGame() {
+		buttons.forEach(button => button.addEventListener('click', playerChoice));
     let playerSelection = playerChoice();
-    let roundResult = ``;
-    if (playerSelection === null || playerSelection === '') {
-      return;
-    }
-    console.log(`Player's score: ${playerScore}`);
-    console.log(`Computer's score: ${computerScore}`);
-    console.log(
-      `Round #${i + 1}: ${playRound(playerSelection, computerSelection)}`
-    );
-  }
-  endGame();
+    if (!playerSelection) return;
+    let computerSelection = computerChoice();   
+    result.textContent = `Round result: ${playRound(playerSelection, computerSelection)}`;
+    playerScore.textContent = `Player's score: ${pScore}`;
+    computerScore.textContent = `Computer's score: ${cScore}`;
+    
+    if (pScore == 5 || cScore == 5) {
+    checkWinner();
+    resetGame();
+	}
 }
 
-// Calculates end game outcome by comparing scores
-function endGame() {
-  if (playerScore > computerScore) {
-    console.log(`Player wins with a score of ${playerScore}`);
-  } else if (playerScore < computerScore) {
-    console.log(`Computer wins with a score of ${computerScore}`);
-  } else if (playerScore == computerScore) {
-    console.log('Friendship wins!');
-  } else {
-    console.log('Game canceled');
+function checkWinner() {
+  if (pScore == 5) {
+    winner.textContent = "Winner: Player!";
+  }
+  else if (cScore == 5) {
+    winner.textContent = "Winner: Computer!";
   }
 }
 
-game();
-
-/*
-Found bugs (FIXED ALL):
--- Friendship wins when player's choice has empty string "" or undefined; // FIXED
-  -- that's because player's undefined value is the same as computer's undefined value, because // FIXED
--- game() doesn't show returned values from playRound(); // FIXED
--- when there's a tie, player's or computer's score randomly increases by 1; // FIXED
--- score increases inconsistently up to 6, but shall stop at 5; // FIXED
--- roundResult is declared but it's value is never read; // FIXED
--- Round's number starts with 0, because of the "for loop". // FIXED
-
-*/
+function resetGame() {
+	buttons.forEach(button => button.removeEventListener('click', playGame));
+	const resetButton = document.createElement('button');
+  resetButton.classList.add('reset-button');
+  resetButton.textContent = "Reset game";
+  buttonContainer.appendChild(resetButton);
+  resetButton.addEventListener('click', () => {
+  	pScore = 0;
+  	cScore = 0;
+		result.textContent = "Round result:";
+  	playerScore.textContent = "Player's score:";
+ 	 	computerScore.textContent = "Computer's score:";
+    winner.textContent = "Winner:";
+    buttons.forEach(button => button.addEventListener('click', playGame));
+    resetButton.remove();
+  });
+ }
