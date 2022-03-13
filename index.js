@@ -19,7 +19,6 @@ function computerChoice() {
   return shapes[~~Math.floor(Math.random() * shapes.length)];
 }
 
-// refers to window.event which is deprecated -- a fix needed
 function playerChoice() {
   return event.target.innerText;
 }
@@ -44,7 +43,7 @@ function playRound(playerSelection, computerSelection) {
 }
 
 function playGame() {
-		buttons.forEach(button => button.addEventListener('click', playerChoice));
+		buttons.forEach(button => button.addEventListener('click', playerChoice()));
     let playerSelection = playerChoice();
     if (!playerSelection) return;
     let computerSelection = computerChoice();   
