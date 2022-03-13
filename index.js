@@ -43,7 +43,7 @@ function playRound(playerSelection, computerSelection) {
 }
 
 function playGame() {
-		buttons.forEach(button => button.addEventListener('click', playerChoice()));
+		buttons.forEach(button => button.addEventListener('click', playerChoice));
     let playerSelection = playerChoice();
     if (!playerSelection) return;
     let computerSelection = computerChoice();   
